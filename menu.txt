@@ -1,0 +1,6 @@
+Espresso,25000.0
+Cappuccino,35000.0
+Tea,35000.0
+Cookie,15000.0
+Milk Tea,30000.0
+Olong,10000.0

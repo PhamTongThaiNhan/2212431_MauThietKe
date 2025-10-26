@@ -1,0 +1,3 @@
+=== COFFEE SHOP RECEIPT ===
+Order #1 | Tea | Qty: 2 | Subtotal: 70000.00 | Discount: 0.00 | Total: 70000.00 | Strategy: RegularPricing
+Generated at: 2025-10-26T14:38:39.286419800
