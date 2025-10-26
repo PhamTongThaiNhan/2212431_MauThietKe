@@ -1,4 +1,0 @@
-Repo: (điền link GitHub của bạn)
-Commit cuối: (hash)
-Sinh viên: 2212431 – Phạm Tống Thái Nhân
-Lớp: CTK46A

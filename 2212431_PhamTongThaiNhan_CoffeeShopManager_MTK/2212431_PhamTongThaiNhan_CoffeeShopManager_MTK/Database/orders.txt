@@ -1,1 +1,0 @@
-Order #1 | Coffee, Caramel | Qty: 3 | Total: 86400.00 | Strategy: MemberPricing

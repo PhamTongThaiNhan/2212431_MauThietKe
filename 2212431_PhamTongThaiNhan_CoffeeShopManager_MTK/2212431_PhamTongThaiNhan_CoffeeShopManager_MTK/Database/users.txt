@@ -1,2 +1,0 @@
-admin:admin123:MANAGER
-staff:staff123:EMPLOYEE

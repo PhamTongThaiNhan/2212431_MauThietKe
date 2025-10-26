@@ -1,3 +1,0 @@
-=== COFFEE SHOP RECEIPT ===
-Order #1 | Coffee, Caramel | Qty: 3 | Total: 86400.00 | Strategy: MemberPricing
-Generated at: 2025-10-24T15:30:09.094114600
