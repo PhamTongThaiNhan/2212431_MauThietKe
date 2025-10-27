@@ -1,2 +1,0 @@
-
-Order #1 | Tea | Qty: 2 | Subtotal: 70000.00 | Discount: 0.00 | Total: 70000.00 | Strategy: RegularPricing

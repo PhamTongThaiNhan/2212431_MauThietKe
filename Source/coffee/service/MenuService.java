@@ -1,27 +1,26 @@
 package coffee.service;
 
-import coffee.model.*;
 import coffee.DAO.ProductDAO;
-import java.util.*;
 import coffee.model.SimpleProduct;
+import java.util.*;
 
 public class MenuService {
-    private List<Product> menu;
-    private ProductDAO dao = new ProductDAO();
+    private final ProductDAO dao = new ProductDAO();
 
     public MenuService() {
-        menu = dao.loadMenu();
+        dao.initTable(); // tạo bảng Menu nếu chưa có
     }
 
-    // Hiển thị menu hiện tại
+    // Hiển thị menu
     public void showMenu() {
+        List<SimpleProduct> menu = dao.loadMenu();
         System.out.println("\n=== MENU HIỆN TẠI ===");
         if (menu.isEmpty()) {
-            System.out.println("⚠️  Menu trống. Hãy thêm món mới!");
+            System.out.println("⚠️ Menu trống. Hãy thêm món mới!");
             return;
         }
         int i = 1;
-        for (Product p : menu) {
+        for (SimpleProduct p : menu) {
             System.out.printf("%d) %s - %.0f VND%n", i++, p.getName(), p.cost());
         }
     }
@@ -40,15 +39,14 @@ public class MenuService {
 
         try {
             double price = Double.parseDouble(priceStr);
-            menu.add(new SimpleProduct(name, price));
-            dao.saveMenu(menu);
+            dao.addProduct(new SimpleProduct(name, price));
             System.out.println("✅ Đã thêm món: " + name + " (" + price + " VND)");
         } catch (NumberFormatException e) {
-            System.out.println("⚠️  Giá không hợp lệ!");
+            System.out.println("⚠️ Giá không hợp lệ!");
         }
     }
 
-    // Xóa món theo tên
+    // Xóa món
     public void removeProduct(Scanner sc) {
         sc.nextLine();
         System.out.println("(Nhập 'b' để quay lại)");
@@ -56,16 +54,11 @@ public class MenuService {
         String name = sc.nextLine();
         if (name.equalsIgnoreCase("b")) return;
 
-        boolean removed = menu.removeIf(p -> p.getName().equalsIgnoreCase(name));
-        if (removed) {
-            dao.saveMenu(menu);
-            System.out.println("🗑 Đã xóa món: " + name);
-        } else {
-            System.out.println("⚠️ Không tìm thấy món " + name);
-        }
+        dao.deleteProduct(name);
+        System.out.println("🗑 Đã xóa món (nếu tồn tại): " + name);
     }
 
-    // Sửa giá món
+    // Cập nhật giá
     public void updatePrice(Scanner sc) {
         sc.nextLine();
         System.out.println("(Nhập 'b' để quay lại)");
@@ -73,56 +66,34 @@ public class MenuService {
         String name = sc.nextLine();
         if (name.equalsIgnoreCase("b")) return;
 
-        boolean found = false;
-        for (Product p : menu) {
-            if (p.getName().equalsIgnoreCase(name)) {
-                System.out.print("Nhập giá mới: ");
-                String newPriceStr = sc.nextLine();
-                if (newPriceStr.equalsIgnoreCase("b")) return;
+        System.out.print("Nhập giá mới: ");
+        String newPriceStr = sc.nextLine();
+        if (newPriceStr.equalsIgnoreCase("b")) return;
 
-                try {
-                    double newPrice = Double.parseDouble(newPriceStr);
-                    if (p instanceof SimpleProduct sp) {
-                        sp.setBasePrice(newPrice);
-                    }
-                    found = true;
-                    break;
-                } catch (NumberFormatException e) {
-                    System.out.println("⚠️  Giá không hợp lệ!");
-                    return;
-                }
-            }
-        }
-
-        if (found) {
-            dao.saveMenu(menu);
-            System.out.println("💰 Đã cập nhật giá thành công!");
-        } else {
-            System.out.println("⚠️ Không tìm thấy món " + name);
+        try {
+            double newPrice = Double.parseDouble(newPriceStr);
+            dao.updatePrice(name, newPrice);
+            System.out.println("💰 Đã cập nhật giá cho " + name + " -> " + newPrice + " VND");
+        } catch (NumberFormatException e) {
+            System.out.println("⚠️ Giá không hợp lệ!");
         }
     }
 
     // Menu quản lý sản phẩm
     public void manageMenu(Scanner sc) {
-        int ch = -1;
+        int ch;
         do {
-            System.out.println("\n=== QUẢN LÝ MENU ===");
+            System.out.println("\n=== QUẢN LÝ MENU (SQLite) ===");
             System.out.println("1. Xem menu");
             System.out.println("2. Thêm món mới");
             System.out.println("3. Xóa món");
             System.out.println("4. Sửa giá");
             System.out.println("0. Quay lại");
             System.out.print("Chọn: ");
-            String input = sc.next();
-            if (input.equalsIgnoreCase("b")) ch = 0;
-            else {
-                try {
-                    ch = Integer.parseInt(input);
-                } catch (NumberFormatException e) {
-                    System.out.println("⚠️ Lựa chọn không hợp lệ!");
-                    continue;
-                }
+            while (!sc.hasNextInt()) {
+                sc.next(); System.out.print("Nhập số hợp lệ: ");
             }
+            ch = sc.nextInt();
 
             switch (ch) {
                 case 1 -> showMenu();

@@ -3,24 +3,43 @@ package coffee.singleton;
 public class UserSession {
     private static UserSession instance;
     private String username;
-    private String role; // "MANAGER" | "EMPLOYEE"
+    private String role;
 
+    // private constructor để đảm bảo Singleton
     private UserSession() {}
 
+    // Lấy instance duy nhất
     public static UserSession getInstance() {
-        if (instance == null) instance = new UserSession();
+        if (instance == null) {
+            instance = new UserSession();
+        }
         return instance;
     }
 
-    public void loginAs(String user, String role) {
-        this.username = user;
+    // Thiết lập thông tin người dùng
+    public void setUser(String username, String role) {
+        this.username = username;
         this.role = role;
     }
 
-    public boolean isLoggedIn() { return username != null; }
-    public String getUsername() { return username; }
-    public String getRole() { return role; }
-    public boolean isManager() { return "MANAGER".equalsIgnoreCase(role); }
+    // Lấy tên người dùng hiện tại
+    public String getUsername() {
+        return username;
+    }
 
-    public void logout() { username = null; role = null; }
+    // Lấy vai trò hiện tại
+    public String getRole() {
+        return role;
+    }
+
+    // Kiểm tra có phải quản lý không
+    public boolean isManager() {
+        return role != null && role.equalsIgnoreCase("admin");
+    }
+
+    // Xóa thông tin đăng nhập (nếu cần logout)
+    public void clear() {
+        username = null;
+        role = null;
+    }
 }
